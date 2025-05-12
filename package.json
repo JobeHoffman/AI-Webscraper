@@ -1,0 +1,16 @@
+{
+  "name": "contentscripts-example",
+  "version": "1.0.0",
+  "main": "content.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "chrome-types": "^0.1.349",
+    "prompt-sync": "^4.2.0"
+  }
+}
