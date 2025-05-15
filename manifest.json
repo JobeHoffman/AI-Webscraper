@@ -10,8 +10,7 @@
       "nativeMessaging",
       "background",
       "http://127.0.0.1:8000/",
-      "webRequest",
-      "webRequestBlocking"
+      "webRequest"
     ],
     "content_scripts": [
       {

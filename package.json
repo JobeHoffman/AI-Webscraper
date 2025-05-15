@@ -12,6 +12,7 @@
   "dependencies": {
     "chrome-types": "^0.1.349",
     "django": "^99.99.99",
+    "openai": "^4.98.0",
     "prompt-sync": "^4.2.0",
     "python-shell": "^5.0.0"
   }

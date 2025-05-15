@@ -68,6 +68,8 @@ const passDataToPy = async (scrapeObj) => {
     })
     let response = await chrome.tabs.sendMessage(tab[0].id, {pyData: scrapeObj})
     console.log(response)
+
+    // this is the result received from API
     let result = response.farewell
     resultingText = result[0]
     resultingImages = result[1]
@@ -77,5 +79,24 @@ const passDataToPy = async (scrapeObj) => {
     console.log(typeof resultingImages)
 
     console.log(`resulting text: ${resultingText}`)
-    console.log(`resulting image at index: ${resultingImages}`)
+    console.log(`resulting images: ${resultingImages}`)
+
+    // DOM manipulation to show result on screen
+    if (!document.getElementById("scrapedText")){
+        const scrapedText = document.createElement("p")
+        scrapedText.setAttribute("id", "scrapedText")
+        scrapedText.innerHTML = resultingText
+        document.body.appendChild(scrapedText)
+    } else {
+        document.getElementById("scrapedText").innerHTML = resultingText
+    }
+
+    if (!document.getElementById("scrapedImages")){
+        const scrapedImages = document.createElement("p")
+        scrapedImages.setAttribute("id", "scrapedImages")
+        scrapedImages.innerHTML = resultingImages.toString()
+        document.body.appendChild(scrapedImages)
+    } else {
+        document.getElementById("scrapedImages").innerHTML = resultingImages.toString()
+    }
 }

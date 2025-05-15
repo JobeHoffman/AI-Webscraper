@@ -20,4 +20,7 @@ def get_data_json(request):
     parsedData = json.loads(request.body)
     text = parsedData.get('scrapedText')
     images = parsedData.get('scrapedImages')
+    
+    # PUT PYTHON CODE HERE
+    
     return JsonResponse([text, images], safe=False)
