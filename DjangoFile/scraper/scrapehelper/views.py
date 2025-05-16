@@ -23,4 +23,5 @@ def get_data_json(request):
     
     # PUT PYTHON CODE HERE
     
+    
     return JsonResponse([text, images], safe=False)
