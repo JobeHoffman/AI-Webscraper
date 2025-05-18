@@ -5,7 +5,7 @@ from openai import OpenAI
 client = OpenAI(apiKey="<DeepSeek API Key>", baseUrl="https://api.deepseek.com")
 
 response = client.chat.completions.create(
-    model="deepseek-reasoner",
+    model="deepseek-chat",
     messages=[
         {"role": "user", "content": f'{prompt}'},
     ],

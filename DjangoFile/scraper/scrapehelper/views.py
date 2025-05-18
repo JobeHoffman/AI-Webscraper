@@ -3,8 +3,23 @@ from django.http import JsonResponse, HttpResponse
 import json
 from django.contrib.auth.models import User
 from django.views.decorators.csrf import csrf_exempt
+from openai import OpenAI
 
 # import LLM api here
+
+def callDeepSeek(prompt, text, images):
+
+    client = OpenAI(apiKey="<DeepSeek API Key>", baseUrl="https://api.deepseek.com")
+    message = prompt + ':' + text + images
+    response = client.chat.completions.create(
+        model="deepseek-chat",
+        messages=[
+            {"role": "user", "content": f'{message}'},
+        ],
+        stream=False
+    )
+
+    print(response.choices[0].message.content)
 
 # Create your views here.
 def home(request):
