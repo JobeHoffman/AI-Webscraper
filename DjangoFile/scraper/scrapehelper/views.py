@@ -10,16 +10,18 @@ from openai import OpenAI
 def callDeepSeek(prompt, text, images):
 
     client = OpenAI(apiKey="<DeepSeek API Key>", baseUrl="https://api.deepseek.com")
-    message = prompt + ':' + text + images
+    message1 = 'Consider the following prompt:' + prompt
+    message2 = 'Apply the previous prompt to the following' + text + images
     response = client.chat.completions.create(
         model="deepseek-chat",
         messages=[
-            {"role": "user", "content": f'{message}'},
+            {"role": "user", "content": f'{message1}'},
+            {"role": "user", "content": f'{message2}'}
         ],
         stream=False
     )
 
-    print(response.choices[0].message.content)
+    print(response.choices[1].message.content)
 
 # Create your views here.
 def home(request):
