@@ -7,11 +7,19 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         for (let image of allImages){
             imageSrcs.push(image.src)
         }
+        
+        const docURL = document.URL
+        console.log(docURL)
+
+        // depending on whether website is social media or article, 
+        // contentType = social media OR article OR...
+
+        
         const textContent = document.body.innerText
-        // const returnText = `images: ${imageSrcs}, text content: ${textContent}`
         const returnObj = {
             images: imageSrcs,
-            text: textContent
+            text: textContent,
+            // typeOfContent: contentType
         }
         // console.log(returnText)
         sendResponse({returnVal: returnObj})

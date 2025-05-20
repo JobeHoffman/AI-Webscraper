@@ -1,0 +1,78 @@
+/* font guideline */
+
+.atkinson-hyperlegible-regular {
+    font-family: "Atkinson Hyperlegible", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+}
+  
+.atkinson-hyperlegible-bold {
+    font-family: "Atkinson Hyperlegible", sans-serif;
+    font-weight: 700;
+    font-style: normal;
+}
+
+body{
+    background-color: bisque;
+}
+
+.button{
+    margin: auto;
+    text-align: center;
+    background-color: #f8c587;
+    border-radius: 10px;
+    margin: 5px;
+    padding: 12px 12px 12px 12px;
+    transition: 0.25s
+}
+
+#scraper {
+    margin: 5px;
+    background-color: #4682B4;
+    border: none;
+    border-radius: 10px;
+    color: white;
+    padding: 1em 2.5em;
+    text-align: center;
+    text-decoration: none;
+    font-family: "Atkinson Hyperlegible", sans-serif;
+    font-size: 1em;
+    transition-duration: 0.1s;
+    opacity: 0.6;
+    box-shadow: 0 6px #396a92;
+}
+
+#scraper:hover {
+    opacity: 0.9;
+    padding: 1.5em 3em
+}
+
+#scraper:active {
+    transform: translateY(3px);
+    box-shadow:0 3px #203c53
+}
+
+.header{
+    background-color: #ffbf72;
+    border-radius: 10px;
+    margin: 5px;
+    padding: 5px 5px 5px 5px;
+    text-align: left;
+}
+
+h1{
+    font-family: "Atkinson Hyperlegible", sans-serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 5px;
+
+
+}
+
+#authors {
+    font-family: "Atkinson Hyperlegible", sans-serif;
+    font-weight: 400;
+    font-size: 0.8rem;
+    margin: 5px;
+    opacity: 0.70;
+}

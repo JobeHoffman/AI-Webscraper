@@ -5,3 +5,6 @@
 - https://developer.mozilla.org/en-US/
 - https://www.youtube.com/watch?v=lSAFVMaaH-w&list=LL&index=3
 - https://www.youtube.com/watch?v=VmdW78mExWY 
+- https://medium.com/@oaishi.faria/connecting-chrome-extension-with-python-backend-912d1d0db26
+- https://www.w3schools.com/ 
+- https://javascript.info/

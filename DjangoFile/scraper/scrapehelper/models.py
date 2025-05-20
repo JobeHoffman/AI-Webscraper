@@ -4,3 +4,4 @@ from django.db import models
 class testMigration(models.Model):
     var1 = models.CharField()
     var2 = models.IntegerField()
+    var3 = models.CharField()

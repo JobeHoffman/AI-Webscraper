@@ -86,17 +86,78 @@ const passDataToPy = async (scrapeObj) => {
         const scrapedText = document.createElement("p")
         scrapedText.setAttribute("id", "scrapedText")
         scrapedText.innerHTML = resultingText
-        document.body.appendChild(scrapedText)
+        scrapedText.style.fontFamily = "'Atkinson Hyperlegible', sans-serif"
+        scrapedText.style.margin = "5px"
+        
+        const scrapedTextTitle = document.createElement("h2")
+        scrapedTextTitle.setAttribute("id", "scrapedTextTitle")
+        scrapedTextTitle.innerHTML = "Scrape result:"
+        scrapedTextTitle.style.fontFamily = "'Atkinson Hyperlegible', sans-serif"
+        scrapedTextTitle.style.fontWeight = 400
+        scrapedTextTitle.style.margin = "5px"
+
+        const newTextDiv = document.createElement("div")
+        newTextDiv.setAttribute("id", "scrapedTextDiv")
+        newTextDiv.style.backgroundColor = "#f9d1a0"
+        newTextDiv.style.padding = "5px 5px 5px 5px"
+        newTextDiv.style.borderRadius = "8px"
+        newTextDiv.style.margin = "5px"
+        newTextDiv.style.overflowWrap = "break-word"
+        newTextDiv.style.opacity = "0"
+
+        newTextDiv.appendChild(scrapedTextTitle)
+        newTextDiv.appendChild(scrapedText)
+        document.body.appendChild(newTextDiv)
+
+        // fade in animation for text div
+        var opacity = 0
+        const dx = 0.025
+        let timer = setInterval(function() {
+            if (opacity === 1){
+                clearInterval(timer)
+                return
+            }
+            opacity = opacity + dx
+            newTextDiv.style.opacity = opacity
+
+        }, 15)
+
+
     } else {
         document.getElementById("scrapedText").innerHTML = resultingText
     }
+    
+    // if (!document.getElementById("scrapedImages")){
+    //     const scrapedImages = document.createElement("p")
+    //     scrapedImages.setAttribute("id", "scrapedImages")
+    //     imageToText = resultingImages.toString()
+    //     scrapedImages.innerHTML = imageToText
+    //     scrapedImages.style.fontFamily = "'Atkinson Hyperlegible', sans-serif"
 
-    if (!document.getElementById("scrapedImages")){
-        const scrapedImages = document.createElement("p")
-        scrapedImages.setAttribute("id", "scrapedImages")
-        scrapedImages.innerHTML = resultingImages.toString()
-        document.body.appendChild(scrapedImages)
-    } else {
-        document.getElementById("scrapedImages").innerHTML = resultingImages.toString()
-    }
+    //     const newImagesDiv = document.createElement("div")
+    //     newImagesDiv.setAttribute("id", "scrapedImagesDiv")
+    //     newImagesDiv.style.backgroundColor = "#f9d1a0"
+    //     newImagesDiv.style.padding = "5px 5px 5px 5px"
+    //     newImagesDiv.style.borderRadius = "8px"
+    //     newImagesDiv.style.margin = "5px"
+    //     newImagesDiv.style.overflowWrap = "break-word"
+
+    //     newImagesDiv.appendChild(scrapedImages)
+
+    //     document.body.appendChild(newImagesDiv)
+
+    //     var opacity = 0
+    //     const dx = 0.025
+    //     let timer = setInterval(function() {
+    //         if (opacity === 1){
+    //             clearInterval(timer)
+    //             return
+    //         }
+    //         opacity = opacity + dx
+    //         newImagesDiv.style.opacity = opacity
+
+    //     }, 15)
+    // } else {
+    //     document.getElementById("scrapedImages").innerHTML = imageToText
+    // }
 }
