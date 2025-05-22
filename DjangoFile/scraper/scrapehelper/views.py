@@ -52,9 +52,8 @@ def get_data_json(request):
     parsedData = json.loads(request.body)
     text = parsedData.get('scrapedText')
     images = parsedData.get('scrapedImages')
-    
+    rq = parsedData.get('sentRq')
     # PUT PYTHON CODE HERE
-    
-    
-    
-    return JsonResponse([text, images], safe=False)
+    # prompt = 'put prompt here'
+    # claudeResponse = callClaude(prompt,text,images)
+    return JsonResponse(text, safe=False)

@@ -1,13 +1,28 @@
+let userRq = undefined
+
 document.addEventListener("DOMContentLoaded", function(){
     const scraper = document.getElementById("scraper");
-    
+
     console.log(scraper) // debugging purposes
 
     if (scraper) {
-        document.addEventListener("click", function () {
+        scraper.addEventListener("click", function () {
             console.log("Button clicked!");
             console.log(document.body)
             requestScrape()
+        })
+    }
+})
+
+document.addEventListener("DOMContentLoaded", function(){
+    const textFieldButton = document.getElementById("tfButton")
+
+    if (textFieldButton){
+        textFieldButton.addEventListener("click", function(){
+            console.log("fetching textfield value...")
+            userRq = document.getElementById("rq").value
+            console.log(userRq)
+            document.getElementById("scraper").disabled = false
         })
     }
 })
@@ -30,14 +45,14 @@ const requestScrape = async() => {
 
         const response = await chrome.tabs.sendMessage(tab.id, {cmd: "scrape"})
         console.log(response.returnVal) // debugging
-        handleScrapeData(response.returnVal)
+        handleScrapeData(response.returnVal, userRq)
     }
     catch(err){
         console.warn(err)
     }
 }
 
-function handleScrapeData(scrapeObj){ // WIP
+function handleScrapeData(scrapeObj){ 
     const [text, imageURLs] = [scrapeObj.text, scrapeObj.images]
 
     // debugging purposes
@@ -66,20 +81,17 @@ const passDataToPy = async (scrapeObj) => {
         target: {tabId: tab[0].id},
         files: ['content.js']
     })
-    let response = await chrome.tabs.sendMessage(tab[0].id, {pyData: scrapeObj})
+    let response = await chrome.tabs.sendMessage(tab[0].id, {pyData: [scrapeObj, userRq]})
     console.log(response)
 
     // this is the result received from API
     let result = response.farewell
-    resultingText = result[0]
-    resultingImages = result[1]
+    resultingText = result
 
     // debugging purposes
     console.log(typeof resultingText)
-    console.log(typeof resultingImages)
 
     console.log(`resulting text: ${resultingText}`)
-    console.log(`resulting images: ${resultingImages}`)
 
     // DOM manipulation to show result on screen
     if (!document.getElementById("scrapedText")){
@@ -111,9 +123,9 @@ const passDataToPy = async (scrapeObj) => {
 
         // fade in animation for text div
         var opacity = 0
-        const dx = 0.025
+        const dx = 0.01
         let timer = setInterval(function() {
-            if (opacity === 1){
+            if (opacity > 1.0){
                 clearInterval(timer)
                 return
             }
