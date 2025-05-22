@@ -1,0 +1,1 @@
+This project serves as a baseline with which you can build a project of your own that utilizes AI. Make sure to not publicly expose your API keys or else it may be financially ruinous. Other than that, have fun with this project
