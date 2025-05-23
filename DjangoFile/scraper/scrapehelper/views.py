@@ -16,9 +16,6 @@ import openai as OpenAI #This if for the call of DeepSeek and ChatGPT if you
 # that were added but not in the documentation of the LLMs.
 ################################################################################
 
-previousMessages = []
-# This is global that keeps track of the previous messages
-
 ################################################################################
 # Claude API call
 ################################################################################
@@ -29,22 +26,22 @@ def callClaude(prompt, inputText, images, previousMessages):
             { "role": "user", "content": [ { "type": "text", "text": f'{inputText}'}]},
             { "role": "user", "content": [ { "type": "image", "image": images}]}
         ]
-    totalMessages = previousMessages + inputMessage
-    client = anthropic.Anthropic()
+    client = anthropic.Anthropic("<API KEY HERE>")
     message = client.messages.create(
         model="claude-3-7-sonnet-20250219",
         max_tokens=10000,
         temperature=1,
         system="Provide a clear and unbiased approach to the following inputs",
-        messages=totalMessages
+        messages=inputMessage
     )
-    previousMessages = totalMessages
+    # previousMessages = totalMessages
     return message.content
 
 ################################################################################
-# Explanation of why someone would use Claude here
+# Explanation of why someone would use Claude here:
+# 
 ################################################################################
-
+#
 ################################################################################
 # DeepSeek API call
 ################################################################################
@@ -152,7 +149,7 @@ def callClaude(prompt, inputText, images, previousMessages):
 # it is reliable, good code or just AI slop. So, I will check it later. I am going
 # out to eat with my family so I have to stop coding here and I would like to push
 # what I have so woopty diddly doo, this is the best option. I will fix it later,
-# don;t worry your little head my star, my perfect silence.
+# don't worry your little head my star, my perfect silence.
 ################################################################################
 
 
