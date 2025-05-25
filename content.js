@@ -5,11 +5,24 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         const allImages = document.getElementsByTagName("img")
         var imageSrcs = []
         for (let image of allImages){
-            imageSrcs.push(image.src)
+            console.log('in the for loop')
+            url = document.URL
+            if (url.includes('instagram')){
+                if ((image.width>200 || image.height>200) && isInVP(image)){
+                    console.log(image.width)
+                    imageSrcs.push(image.src)
+                }
+            } else{
+                console.log('in else statement')
+                if ((image.width>100 || image.height>100) && isInVP(image)){
+                    console.log(image.width)
+                    imageSrcs.push(image.src)
+                }
+            }
         }
         
         const docURL = document.URL
-        console.log(docURL)
+        console.log(imageSrcs)
 
         
         // depending on whether website is social media or article, 
@@ -74,3 +87,22 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     }
     
 })
+
+// is element in viewport?
+function isInVP(el){
+    let rect = el.getBoundingClientRect()
+    const inVP = (
+        rect.top >= 0 &&
+        rect.left >= 0 &&
+        rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+        rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+    )
+
+    const styles = window.getComputedStyle(el)
+    const canView = (
+        styles.visibility !== 'hidden' &&
+        styles.display !== 'none'
+    )
+    return inVP && canView
+}
+  
