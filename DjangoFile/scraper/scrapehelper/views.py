@@ -7,6 +7,7 @@ import anthropic
 import openai as OpenAI #This if for the call of DeepSeek and ChatGPT if you
 import base64
 import httpx
+import time
 # choose to use those over Claude
 
 ################################################################################
@@ -42,18 +43,26 @@ def callClaude(prompt, inputText, images, previousMessages=[]):
     
     # I LOVE BASE 64 ENCODING
     for image in images:
-        imageURL = image
-        imageMediaType = "image/jpeg"
-        imageData = base64.standard_b64encode(httpx.get(imageURL).content).decode("utf-8")
-        format = {
-            "type": "image",
-            "source": {
-                "type": "base64",
-                "media_type": imageMediaType,
-                "data": imageData
+        if '.svg' not in image:
+            if '.jpg' in image:
+                imageMediaType = "image/jpeg"
+            elif '.png' in image:
+                imageMediaType = "image/png"
+            elif '.gif' in image:
+                imageMediaType = "image/gif"
+            elif '.webp' in image:
+                imageMediaType = "image/webp"
+            imageURL = image
+            imageData = base64.standard_b64encode(httpx.get(imageURL).content).decode("utf-8")
+            format = {
+                "type": "image",
+                "source": {
+                    "type": "base64",
+                    "media_type": imageMediaType,
+                    "data": imageData
+                }
             }
-        }
-        inputMessage[0]["content"].append(format)
+            inputMessage[0]["content"].append(format)
 
     inputMessage[0]["content"].append({
         "type": "text",
@@ -207,11 +216,24 @@ def get_data_json(request):
     text = parsedData.get('scrapedText')
     images = parsedData.get('scrapedImages')
     rq = parsedData.get('sentRq')
-    # print(isinstance(images, list))
+    
+    # THE IMPORTANT SHIT:
     claudeResponse = callClaude(rq,text,images)
     strResponse = claudeResponse[0].text
 
     # make sure to export anthropic key before making requests!
     # format: export ANTHROPIC_API_KEY="<your key here>"
 
+    # just a temporary timer to test loading screen logic
+    # t = 3
+    # countdown(t)
+
     return JsonResponse(strResponse, safe=False)
+
+def countdown(t):
+    while t:
+        mins, secs = divmod(t, 60)
+        timer = '{:02d}:{:02d}'.format(mins, secs)
+        print(timer, end='\r')  # Overwrite the line each second
+        time.sleep(1)
+        t -= 1
