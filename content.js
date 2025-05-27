@@ -66,6 +66,8 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         const url = 'https://opensource-ai-webscraper.onrender.com/get_data_json/'
         const text = scrapeObj.text
         const images = scrapeObj.images
+        const controller = new AbortController()
+        const timer = setTimeout(()=>controller.abort(),60000)
 
         console.log(url)
         fetch(url, {
@@ -78,11 +80,18 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
             headers: {
                 "Content-type": "application/json; charset=UTF-8"
             },
-            signal: AbortSignal.timeout(60000),
+            signal: controller.signal,
         })
-        .then(response => response.json())
+        .then(response => {
+            clearTimeout(timer)
+            response.json()
+
+        })
         .then(response => sendResponse({farewell: response}))
-        .catch(err => console.log(err))
+        .catch(err => {
+            clearTimeout(timer)
+            console.log(err)
+        })
 
         return true
     }
