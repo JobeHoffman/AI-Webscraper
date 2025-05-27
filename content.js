@@ -67,7 +67,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         const text = scrapeObj.text
         const images = scrapeObj.images
         const controller = new AbortController()
-        const timer = setTimeout(()=>controller.abort(),60000)
+        const timer = setTimeout(()=>controller.abort(),120000)
 
         console.log(url)
         fetch(url, {
