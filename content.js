@@ -63,7 +63,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         console.log(userRq)
 
         // needs to change if we deploy server thru ASGI/WSGI
-        const url = 'meowwarrior123.pythonanywhere.com/get_data_json/'
+        const url = 'https://meowwarrior123.pythonanywhere.com/get_data_json/'
         const text = scrapeObj.text
         const images = scrapeObj.images
 
