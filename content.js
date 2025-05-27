@@ -84,7 +84,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         })
         .then(response => {
             clearTimeout(timer)
-            response.json()
+            return response.json()
 
         })
         .then(response => sendResponse({farewell: response}))
