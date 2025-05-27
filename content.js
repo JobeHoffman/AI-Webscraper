@@ -77,7 +77,8 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
             }),
             headers: {
                 "Content-type": "application/json; charset=UTF-8"
-            }
+            },
+            signal: AbortSignal.timeout(60000),
         })
         .then(response => response.json())
         .then(response => sendResponse({farewell: response}))
