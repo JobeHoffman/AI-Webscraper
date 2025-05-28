@@ -5,6 +5,9 @@ from django.contrib.auth.models import User
 from django.views.decorators.csrf import csrf_exempt
 import anthropic 
 import openai as OpenAI #This if for the call of DeepSeek and ChatGPT if you
+import base64
+import httpx
+import time
 # choose to use those over Claude
 
 ################################################################################
@@ -20,21 +23,66 @@ import openai as OpenAI #This if for the call of DeepSeek and ChatGPT if you
 # Claude API call
 ################################################################################
 
-def callClaude(prompt, inputText, images):
+def callClaude(prompt, inputText, images, previousMessages=[]):
     inputMessage = [
-            { "role": "user", "content": [ { "type": "text", "text": f'{prompt}'}] },
-            { "role": "user", "content": [ { "type": "text", "text": f'{inputText}'}]},
-            { "role": "user", "content": [ { "type": "image", "image": images}]}
+            # { "role": "user", "content": [ { "type": "text", "text": f'{prompt}'}] },
+            # { "role": "user", "content": [ { "type": "text", "text": f'{inputText}'}]},
+            # { "role": "user", "content": [ { "type": "image", "image": images}]}
+
+            {"role": "user", "content":[
+                {
+                    "type": "text",
+                    "text": f'here is the research prompt: {prompt}'
+                },
+                {
+                    "type": "text",
+                    "text": f'here is the text scraped from the website: {inputText}'
+                }
+            ]}
         ]
-    client = anthropic.Anthropic("<API KEY HERE>")
+    
+    # I LOVE BASE 64 ENCODING
+    for image in images:
+        if '.svg' not in image:
+            if '.jpg' in image:
+                imageMediaType = "image/jpeg"
+            elif '.png' in image:
+                imageMediaType = "image/png"
+            elif '.gif' in image:
+                imageMediaType = "image/gif"
+            elif '.webp' in image:
+                imageMediaType = "image/webp"
+            imageURL = image
+            imageData = base64.standard_b64encode(httpx.get(imageURL).content).decode("utf-8")
+            format = {
+                "type": "image",
+                "source": {
+                    "type": "base64",
+                    "media_type": imageMediaType,
+                    "data": imageData
+                }
+            }
+            inputMessage[0]["content"].append(format)
+
+    inputMessage[0]["content"].append({
+        "type": "text",
+        "text": '''According to the research prompt I gave you, 
+        perform a content analysis and give me key insights/observations and 
+        how these insights/observations interact with my research prompt'''
+    })
+    
+    client = anthropic.Anthropic()
     message = client.messages.create(
-        model="claude-3-7-sonnet-20250219",
-        max_tokens=10000,
+        model="claude-3-5-sonnet-20240620",
+        max_tokens=8192,
         temperature=1,
-        system="Provide a clear and unbiased approach to the following inputs",
+        system='''You are a 1-response api with absolutely no markup formatting. EVERYTHING must be in plain text with no new lines and no bolding or other formattings. Finally, 
+        use both the given text input and images input to derive your analysis!''',
         messages=inputMessage
     )
+
     # previousMessages = totalMessages
+
     return message.content
 
 ################################################################################
@@ -168,7 +216,25 @@ def get_data_json(request):
     text = parsedData.get('scrapedText')
     images = parsedData.get('scrapedImages')
     rq = parsedData.get('sentRq')
-    # PUT PYTHON CODE HERE
-    # prompt = 'put prompt here'
-    # claudeResponse = callClaude(prompt, text, images)
-    return JsonResponse(text, safe=False)
+    
+    # THE IMPORTANT SHIT (I commented ts out cus too expensive mane):
+    # claudeResponse = callClaude(rq,text,images)
+    # strResponse = claudeResponse[0].text
+
+    # make sure to export anthropic key before making requests!
+    # format: export ANTHROPIC_API_KEY="<your key here>"
+    # for server hosting websites like render, API key is stored as env
+
+    # just a temporary timer to test loading screen logic
+    # t = 3
+    # countdown(t)
+
+    return JsonResponse(text + str(images), safe=False)
+
+def countdown(t):
+    while t:
+        mins, secs = divmod(t, 60)
+        timer = '{:02d}:{:02d}'.format(mins, secs)
+        print(timer, end='\r')  # Overwrite the line each second
+        time.sleep(1)
+        t -= 1

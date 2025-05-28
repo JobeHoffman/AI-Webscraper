@@ -8,3 +8,5 @@
 - https://medium.com/@oaishi.faria/connecting-chrome-extension-with-python-backend-912d1d0db26
 - https://www.w3schools.com/ 
 - https://javascript.info/
+- https://docs.anthropic.com/en/docs/overview 
+- https://docs.djangoproject.com/en/3.0/intro/tutorial01/ 

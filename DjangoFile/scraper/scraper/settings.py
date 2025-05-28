@@ -28,7 +28,8 @@ DEBUG = True
 ALLOWED_HOSTS = [
     "localhost",
     "127.0.0.1",
-    "/get_data_json/"
+    "/get_data_json/",
+    "opensource-ai-webscraper.onrender.com"
 ]
 
 

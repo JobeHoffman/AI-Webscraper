@@ -10,6 +10,7 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "aos": "^2.3.4",
     "chrome-types": "^0.1.349",
     "django": "^99.99.99",
     "openai": "^4.98.0",
