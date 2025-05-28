@@ -20,7 +20,7 @@ import openai as OpenAI #This if for the call of DeepSeek and ChatGPT if you
 # Claude API call
 ################################################################################
 
-def callClaude(prompt, inputText, images, previousMessages):
+def callClaude(prompt, inputText, images):
     inputMessage = [
             { "role": "user", "content": [ { "type": "text", "text": f'{prompt}'}] },
             { "role": "user", "content": [ { "type": "text", "text": f'{inputText}'}]},
@@ -170,5 +170,5 @@ def get_data_json(request):
     rq = parsedData.get('sentRq')
     # PUT PYTHON CODE HERE
     # prompt = 'put prompt here'
-    # claudeResponse = callClaude(prompt,text,images)
+    # claudeResponse = callClaude(prompt, text, images)
     return JsonResponse(text, safe=False)
