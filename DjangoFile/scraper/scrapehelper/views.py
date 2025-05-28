@@ -17,6 +17,7 @@ import time
 # for why you would use one over the others.
 # There will also be an accompanying explanation for the various components
 # that were added but not in the documentation of the LLMs.
+# The calls now are made as if the AI were used for social media research.
 ################################################################################
 
 ################################################################################
@@ -71,7 +72,7 @@ def callClaude(prompt, inputText, images, previousMessages=[]):
         how these insights/observations interact with my research prompt'''
     })
     
-    client = anthropic.Anthropic()
+    client = anthropic.Anthropic() # API key goes here
     message = client.messages.create(
         model="claude-3-5-sonnet-20240620",
         max_tokens=8192,
@@ -87,13 +88,15 @@ def callClaude(prompt, inputText, images, previousMessages=[]):
 
 ################################################################################
 # Explanation of why someone would use Claude here:
-# 
+# Claude is the most expensive in terms of API key pricing, but in every other
+# regard it is one of the best LLMs on the market.
 ################################################################################
 #
 ################################################################################
 # DeepSeek API call
 ################################################################################
-# def callDeepSeek(prompt, text, previousMessages):
+#
+# def callDeepSeek(prompt, text, previousMessages = []):
 #
 #     client = OpenAI(apiKey="<DeepSeek API Key>", baseUrl="https://api.deepseek.com")
 #     message1 = 'Consider the following prompt:' + prompt
@@ -111,6 +114,13 @@ def callClaude(prompt, inputText, images, previousMessages=[]):
 #     previousMessages = totalMessages
 #     return response.choices[-1].message.content
 #
+################################################################################
+# Explanation of why someone would use DeepSeek here:
+# DeepSeek is the least expensive on the market and gives very good results, 
+# in many cases comparable to Claude and Chat-GPT. However, it is unable to
+# take images as inputs which can become a problem for the specific use case
+# the project is tuned to now (social media research).
+################################################################################
 #
 ################################################################################
 # ChatGPT API call
