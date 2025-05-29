@@ -1,5 +1,5 @@
-anthropic==0.52.0
-httpx==0.28.1
+anthropic
+httpx
 gunicorn
 django
 openai
