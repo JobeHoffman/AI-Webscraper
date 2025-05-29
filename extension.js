@@ -34,7 +34,7 @@ document.addEventListener("DOMContentLoaded", function(){
     console.log(resetBtn)
     if (resetBtn){
         resetBtn.addEventListener("click", function(){
-            enableButtons()
+            document.getElementById("tfButton").disabled = false
             const scrapedResult = document.getElementsByClassName("scrapedResult")[0]
             scrapedResult.innerHTML=""
             scrapedResult.style.opacity=0
@@ -130,10 +130,7 @@ function disableButtons(){
     document.getElementById("tfButton").disabled = true 
 }
 
-function enableButtons(){
-    document.getElementById("scraper").disabled = false
-    document.getElementById("tfButton").disabled = false
-}
+
 
 function displayScrapeResult(){
     const scrapedText = document.createElement("p")
@@ -175,9 +172,10 @@ function renderLoading(){
     loadingText.style.margin = "5px"
     loadingText.style.fontSize = "1.2em"
     loadingDiv.style.opacity = "0.5"
+    
 
     loadingDiv.appendChild(loadingText)
-    document.body.appendChild(loadingDiv)
+    document.getElementsByClassName("loading")[0].appendChild(loadingDiv)
 
     let timer2 = setInterval(function() {
     if (loadingText.innerHTML === "thinking..."){
