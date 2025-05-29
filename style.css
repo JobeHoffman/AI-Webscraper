@@ -16,17 +16,22 @@ body{
     background-color: bisque;
 }
 
-.button{
+.button, .resetButton{
     margin: auto;
     text-align: center;
     background-color: #f8c587;
     border-radius: 10px;
     margin: 5px;
     padding: 12px 12px 12px 12px;
-    transition: 0.25s
+    transition: 0.5s
 }
 
-#scraper {
+.resetButton{
+    opacity: 0;
+    background-color: #f9d1a0;
+}
+
+#scraper, #reset {
     margin: 5px;
     background-color: #5995c5;
     border: none;
@@ -42,12 +47,12 @@ body{
     box-shadow: 0 6px #396a92;
 }
 
-#scraper:enabled:hover {
+#scraper:enabled:hover, #reset:enabled:hover {
     opacity: 0.9;
     cursor:pointer
 }
 
-#scraper:enabled:active {
+#scraper:enabled:active, #reset:enabled:active {
     transform: translateY(3px);
     box-shadow:0 3px #203c53;
     cursor:pointer
@@ -58,13 +63,19 @@ body{
     cursor: not-allowed;
 }
 
+#reset:disabled{
+    opacity: 0;
+}
+
 .header{
-    background-color: #ffbf72;
     border-radius: 10px;
     margin: 5px;
     padding: 5px 5px 5px 5px;
     text-align: left;
+    transition: 0.5s all;
+    background: #ffbf72;
 }
+
 
 h1{
     font-family: "Atkinson Hyperlegible", sans-serif;
@@ -128,14 +139,30 @@ h1{
     font-size: 1em;
     padding: 6px 39px;
     opacity: 0.6;
-    transition: 0.5s opacity;
+    transition: 0.5s all;
 }
 
-#tfButton:hover{
+.scrapedResult{
+    opacity: 0;
+    visibility: hidden;
+    background-color: #f9d1a0;
+    overflow-wrap: break-word;
+    margin: 5px;
+    border-radius: 8px;
+    padding: 5px 5px 5px 5px;
+    transition: 0.25s all;
+}
+
+#tfButton:disabled{
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+#tfButton:enabled:hover{
     opacity: 1;
     cursor: pointer
 }
 
-#tfButton:active{
+#tfButton:enabled:active{
     cursor: pointer
 }

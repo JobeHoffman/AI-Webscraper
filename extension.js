@@ -20,13 +20,32 @@ document.addEventListener("DOMContentLoaded", function(){
 
     if (scraper) {
         scraper.addEventListener("click", function () {
-            console.log("Button clicked!");
-            console.log(document.body)
+            // console.log("Button clicked!");
+            // console.log(document.body)
             requestScrape()
-            document.getElementById("scraper").disabled = true
+            disableButtons()
             renderLoading()
         })
     }
+})
+
+document.addEventListener("DOMContentLoaded", function(){
+    const resetBtn = document.getElementById("reset")
+    console.log(resetBtn)
+    if (resetBtn){
+        resetBtn.addEventListener("click", function(){
+            enableButtons()
+            const scrapedResult = document.getElementsByClassName("scrapedResult")[0]
+            scrapedResult.innerHTML=""
+            scrapedResult.style.opacity=0
+            scrapedResult.style.visibility="hidden"
+
+            resetBtn.disabled=true
+            const resetDiv = document.getElementsByClassName("resetButton")[0]
+            resetDiv.style.opacity = 0
+        })
+    }
+
 })
 
 const requestScrape = async() => {
@@ -86,6 +105,7 @@ const passDataToPy = async (scrapeObj) => {
     let response = await chrome.tabs.sendMessage(tab[0].id, {pyData: [scrapeObj, userRq]})
     clearLoading()
     console.log(response)
+
     // this is the result received from API
     let result = response.farewell
     resultingText = result
@@ -98,9 +118,21 @@ const passDataToPy = async (scrapeObj) => {
     // DOM manipulation to show result on screen
     if (!document.getElementById("scrapedText")){
         displayScrapeResult()
+        document.getElementsByClassName("resetButton")[0].style.opacity = 1
+        document.getElementById("reset").disabled=false
     } else {
         document.getElementById("scrapedText").innerHTML = resultingText
     }
+}
+
+function disableButtons(){
+    document.getElementById("scraper").disabled = true
+    document.getElementById("tfButton").disabled = true 
+}
+
+function enableButtons(){
+    document.getElementById("scraper").disabled = false
+    document.getElementById("tfButton").disabled = false
 }
 
 function displayScrapeResult(){
@@ -113,36 +145,17 @@ function displayScrapeResult(){
     
     const scrapedTextTitle = document.createElement("h2")
     scrapedTextTitle.setAttribute("id", "scrapedTextTitle")
-    scrapedTextTitle.innerHTML = "Scrape result:"
+    scrapedTextTitle.innerHTML = "Result:"
     scrapedTextTitle.style.fontFamily = "'Atkinson Hyperlegible', sans-serif"
     scrapedTextTitle.style.fontWeight = 400
     scrapedTextTitle.style.margin = "5px"
 
-    const newTextDiv = document.createElement("div")
-    newTextDiv.setAttribute("id", "scrapedTextDiv")
-    newTextDiv.style.backgroundColor = "#f9d1a0"
-    newTextDiv.style.padding = "5px 5px 5px 5px"
-    newTextDiv.style.borderRadius = "8px"
-    newTextDiv.style.margin = "5px"
-    newTextDiv.style.overflowWrap = "break-word"
-    newTextDiv.style.opacity = "0"
-
-    newTextDiv.appendChild(scrapedTextTitle)
-    newTextDiv.appendChild(scrapedText)
-    document.body.appendChild(newTextDiv)
-
+    const scrapedResult = document.getElementsByClassName("scrapedResult")[0]
+    scrapedResult.appendChild(scrapedTextTitle)
+    scrapedResult.appendChild(scrapedText)
     // fade in animation for text div
-    var opacity = 0
-    const dx = 0.01
-    let timer = setInterval(function() {
-        if (opacity > 1.0){
-            clearInterval(timer)
-            return
-        }
-        opacity = opacity + dx
-        newTextDiv.style.opacity = opacity
-
-    }, 20)
+    scrapedResult.style.visibility = "visible"
+    scrapedResult.style.opacity=1
 }
 
 function renderLoading(){
@@ -157,7 +170,7 @@ function renderLoading(){
     loadingDiv.style.textAlign = "center"
 
     const loadingText = document.createElement("p")
-    loadingText.innerHTML = "loading."
+    loadingText.innerHTML = "thinking."
     loadingText.style.fontFamily = "'Atkinson Hyperlegible', sans-serif"
     loadingText.style.margin = "5px"
     loadingText.style.fontSize = "1.2em"
@@ -167,8 +180,8 @@ function renderLoading(){
     document.body.appendChild(loadingDiv)
 
     let timer2 = setInterval(function() {
-    if (loadingText.innerHTML === "loading..."){
-        loadingText.innerHTML = "loading"
+    if (loadingText.innerHTML === "thinking..."){
+        loadingText.innerHTML = "thinking"
     }
     loadingText.innerHTML = loadingText.innerHTML + '.'
 

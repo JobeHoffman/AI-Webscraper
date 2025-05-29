@@ -239,7 +239,7 @@ def get_data_json(request):
     # t = 3
     # countdown(t)
 
-    return JsonResponse(text + str(images), safe=False)
+    return JsonResponse(rq + text + str(images), safe=False)
 
 def countdown(t):
     while t:
