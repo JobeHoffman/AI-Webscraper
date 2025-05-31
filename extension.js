@@ -1,4 +1,13 @@
 let userRq = undefined
+let resultingText = undefined
+let pageUrl = undefined
+
+async function getPageUrl(){
+    pageUrl = await requestURL()
+}
+
+getPageUrl()
+
 
 document.addEventListener("DOMContentLoaded", function(){
     const textFieldButton = document.getElementById("tfButton")
@@ -67,6 +76,30 @@ const requestScrape = async() => {
         const response = await chrome.tabs.sendMessage(tab.id, {cmd: "scrape"})
         console.log(response.returnVal) // debugging
         handleScrapeData(response.returnVal, userRq)
+    }
+    catch(err){
+        console.warn(err)
+    }
+}
+
+async function requestURL(){
+    try{
+        let [tab] = await chrome.tabs.query({active:true, lastFocusedWindow:true})
+        if (tab === undefined){
+            return
+        }
+
+        await chrome.scripting.executeScript({
+            target: { tabId: tab.id },
+            files: ['content.js']
+        })
+
+        const response = await chrome.tabs.sendMessage(tab.id, {getUrl: "getURL"})
+        console.log(response)
+        console.log(response.returnVal)
+
+        return response.returnVal
+
     }
     catch(err){
         console.warn(err)
@@ -147,12 +180,28 @@ function displayScrapeResult(){
     scrapedTextTitle.style.fontWeight = 400
     scrapedTextTitle.style.margin = "5px"
 
+    
+    
+    const copyButton = document.createElement("button")
+    copyButton.setAttribute("id", "copyButton")
+    copyButton.innerHTML = 'Copy results to clipboard to put in Excel/Googlesheets'
+
     const scrapedResult = document.getElementsByClassName("scrapedResult")[0]
     scrapedResult.appendChild(scrapedTextTitle)
     scrapedResult.appendChild(scrapedText)
+    scrapedResult.appendChild(copyButton)
+
+    if (copyButton){
+        copyButton.addEventListener("click", function(){
+            console.log("HELLOHELLOHELLOHELLOHELLO")
+            createAndCopyTable(userRq, pageUrl, resultingText)
+        })
+    }
+
     // fade in animation for text div
     scrapedResult.style.visibility = "visible"
     scrapedResult.style.opacity=1
+
 }
 
 function renderLoading(){
@@ -198,4 +247,50 @@ function clearLoading(){
         }
         loadingEl.style.opacity -= dx
         }, 20)
+}
+
+function createAndCopyTable(rq, url, returnText){
+    const tbl = document.createElement("table")
+    const c1Text = 'Research Question'
+    const c2Text = 'URL of Media'
+    const c3Text = 'Generated Analysis/Observations'
+    for (let i = 0; i<2; i++){
+        const tr = tbl.insertRow()
+        for (let j = 0; j<3; j++){
+            const td = tr.insertCell()
+            if (i === 0){
+                switch(j){
+                    case 0: 
+                        td.appendChild(document.createTextNode(c1Text)) 
+                        break
+                    case 1: 
+                        td.appendChild(document.createTextNode(c2Text))
+                        break
+                    case 2: 
+                        td.appendChild(document.createTextNode(c3Text))
+                        break
+                }
+            } else{
+                switch(j){
+                    case 0: 
+                        td.appendChild(document.createTextNode(rq))
+                        break
+                    case 1: 
+                        td.appendChild(document.createTextNode(url))
+                        break
+                    case 2: 
+                        td.appendChild(document.createTextNode(returnText))
+                        break
+                }
+            }
+        }
+    }
+    if (navigator.clipboard){
+        const text = tbl.outerHTML
+        console.log("HELLOHELLOHELLOHELLO")
+        const type = 'text/html'
+        const tblRow = new Blob([text], {type})
+        navigator.clipboard.write([new ClipboardItem({[type]: tblRow})])
+    }
+
 }

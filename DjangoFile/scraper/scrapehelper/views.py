@@ -228,8 +228,8 @@ def get_data_json(request):
     rq = parsedData.get('sentRq')
     
     # THE IMPORTANT SHIT (I commented ts out cus too expensive mane):
-    # claudeResponse = callClaude(rq,text,images)
-    # strResponse = claudeResponse[0].text
+    claudeResponse = callClaude(rq,text,images)
+    strResponse = claudeResponse[0].text
 
     # make sure to export anthropic key before making requests!
     # format: export ANTHROPIC_API_KEY="<your key here>"
@@ -238,8 +238,9 @@ def get_data_json(request):
     # just a temporary timer to test loading screen logic
     # t = 3
     # countdown(t)
+    # temporary = rq + text + str(images)
 
-    return JsonResponse(rq + text + str(images), safe=False)
+    return JsonResponse(strResponse, safe=False)
 
 def countdown(t):
     while t:

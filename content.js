@@ -23,25 +23,6 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         
         const docURL = document.URL
         console.log(imageSrcs)
-
-        
-        // depending on whether website is social media or article, 
-        // contentType = social media OR article OR...
-        /* do we need to include this?
-        var contentType = "default"
-        switch(docURL){
-            case docURL.includes("instagram.com"):
-                console.log('instagram')
-                contentType = "social media"
-                break
-            case docURL.incldues("x.com"):
-                console.log('X/twitter')
-                contentType = "social media"
-                break
-        }
-        */
-
-
         const textContent = document.body.innerText
         const returnObj = {
             images: imageSrcs,
@@ -62,11 +43,16 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         console.log(scrapeObj.images)
         console.log(userRq)
 
-        // this url is for ACTUAL DEPLOYMENT
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        
+        // this url is for ACTUAL DEPLOYMENT:
         const url = 'https://opensource-ai-webscraper.onrender.com/get_data_json/'
 
-        // this url is for LOCAL DEPLOYMENT (DEVELOPMENT)
+        // this url is for LOCAL DEPLOYMENT (DEVELOPMENT):
         // const url = 'http://127.0.0.1:8000/get_data_json/'
+
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
         const text = scrapeObj.text
         const images = scrapeObj.images
         const controller = new AbortController()
@@ -97,6 +83,9 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         })
 
         return true
+    } else if (request.getUrl){
+        console.log(document.URL)
+        sendResponse({returnVal: document.URL})
     }
     
 })
