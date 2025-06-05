@@ -1,3 +1,4 @@
+// some important params
 let userRq = undefined
 let resultingText = undefined
 let pageUrl = undefined
@@ -287,7 +288,6 @@ function createAndCopyTable(rq, url, returnText){
     }
     if (navigator.clipboard){
         const text = tbl.outerHTML
-        console.log("HELLOHELLOHELLOHELLO")
         const type = 'text/html'
         const tblRow = new Blob([text], {type})
         navigator.clipboard.write([new ClipboardItem({[type]: tblRow})])

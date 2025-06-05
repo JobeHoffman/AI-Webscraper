@@ -67,9 +67,9 @@ def callClaude(prompt, inputText, images, previousMessages=[]):
 
     inputMessage[0]["content"].append({
         "type": "text",
-        "text": '''According to the research prompt I gave you, 
-        perform a content analysis and give me key insights/observations and 
-        how these insights/observations interact with my research prompt'''
+        "text": '''According to the research question I gave you, 
+        perform a content analysis. Give me key insights/observations keeping in mind 
+        how these insights/observations interact with my research question'''
     })
     
     client = anthropic.Anthropic() # API key goes here
@@ -227,9 +227,9 @@ def get_data_json(request):
     images = parsedData.get('scrapedImages')
     rq = parsedData.get('sentRq')
     
-    # THE IMPORTANT SHIT (I commented ts out cus too expensive mane):
-    claudeResponse = callClaude(rq,text,images)
-    strResponse = claudeResponse[0].text
+    # THE IMPORTANT  (I commented ts out cus too expensive):
+    # claudeResponse = callClaude(rq,text,images)
+    # strResponse = claudeResponse[0].text
 
     # make sure to export anthropic key before making requests!
     # format: export ANTHROPIC_API_KEY="<your key here>"
@@ -238,9 +238,9 @@ def get_data_json(request):
     # just a temporary timer to test loading screen logic
     # t = 3
     # countdown(t)
-    # temporary = rq + text + str(images)
+    temporary = rq + text + str(images)
 
-    return JsonResponse(strResponse, safe=False)
+    return JsonResponse(temporary, safe=False)
 
 def countdown(t):
     while t:
