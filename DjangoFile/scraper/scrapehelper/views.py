@@ -165,24 +165,13 @@ def get_data_json(request):
     rq = parsedData.get('sentRq')
     
     # THE IMPORTANT  (I commented ts out cus too expensive):
-    # claudeResponse = callClaude(rq,text,images)
-    # strResponse = claudeResponse[0].text
+    claudeResponse = callClaude(rq,text,images)
+    strResponse = claudeResponse[0].text
 
     # make sure to export anthropic key before making requests!
     # format: export ANTHROPIC_API_KEY="<your key here>"
     # for server hosting websites like render, API key is stored as env
 
-    # just a temporary timer to test loading screen logic
-    # t = 3
-    # countdown(t)
-    temporary = rq + text + str(images)
+    # temporary = rq + text + str(images)
 
-    return JsonResponse(temporary, safe=False)
-
-def countdown(t):
-    while t:
-        mins, secs = divmod(t, 60)
-        timer = '{:02d}:{:02d}'.format(mins, secs)
-        print(timer, end='\r')  # Overwrite the line each second
-        time.sleep(1)
-        t -= 1
+    return JsonResponse(strResponse, safe=False)
