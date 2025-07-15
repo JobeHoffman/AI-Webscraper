@@ -7,7 +7,22 @@ import anthropic
 import openai as OpenAI #This if for the call of DeepSeek and ChatGPT if you
 import base64
 import httpx
-import time
+from openai import OpenAI
+
+# agentic AI setup
+from dotenv import load_dotenv
+from pydantic import BaseModel
+from langchain_openai import ChatOpenAI
+from langchain_anthropic import ChatAnthropic
+from langchain_core.prompts import ChatPromptTemplate
+from langchain_core.output_parsers import PydanticOutputParser
+from langchain.agents import create_tool_calling_agent, AgentExecutor
+
+# tools import
+from langchain.tools import Tool
+
+# ToDos: agentic ai integration
+load_dotenv()
 # choose to use those over Claude
 
 ################################################################################
@@ -126,21 +141,114 @@ def callClaude(prompt, inputText, images, previousMessages=[]):
 # ChatGPT API call
 ################################################################################
 
-def callChatGPT(prompt, inputText, images):
+def callOpenAI(rq, inputText, images):
+    # client = OpenAI()
+    # imageInput = [{"role": "user", "content": [{
+    #             "type": "input_image",
+    #             "image_url": image
+    #         }]} for image in images]
+    # response = client.responses.create(
+    #     model = "gpt-4.1",
+    #     input = [
+    #         {"role" : "user", "content": f'''Consider the following prompt
+    #          in relation to the images and text in the next prompts: "{prompt}"'''},
+    #         {"role": "user", "content": f"{inputText}"}
+    #     ] + imageInput
+    # )
+    # return response
     client = OpenAI()
-    imageInput = [{"role": "user", "content": [{
+    input=[{   
+            "role": "user",
+            "content": [
+                {
+                    "type": "input_text", 
+                    "text": f"What are some key details in the images provided in relation to the rq?: {rq}"
+                }
+            ]
+        }
+    ]
+
+    # this is an expansive list
+    for image in images:
+        if '.svg' not in image:
+            if '.jpg' in image:
+                imageMediaType = "image/jpeg"
+            elif '.png' in image:
+                imageMediaType = "image/png"
+            elif '.gif' in image:
+                imageMediaType = "image/gif"
+            elif '.webp' in image:
+                imageMediaType = "image/webp"
+            imageURL = image
+            imageData = base64.standard_b64encode(httpx.get(imageURL).content).decode("utf-8")
+            format = {
                 "type": "input_image",
-                "image_url": image
-            }]} for image in images]
-    response = client.responses.create(
-        model = "gpt-4.1",
-        input = [
-            {"role" : "user", "content": f'''Consider the following prompt
-             in relation to the images and text in the next prompts: "{prompt}"'''},
-            {"role": "user", "content": f"{inputText}"}
-        ] + imageInput
+                "image_url": f"data:image/jpeg;base64,{imageData}"
+            }
+            input[0]["content"].append(format)
+    
+    imageAnalysis = client.responses.create(
+        model="gpt-4o-mini-2024-07-18",
+        input=input
     )
-    return response
+
+    print(imageAnalysis.output_text)
+
+    class responseFormat(BaseModel):
+        overall_synthesis_of_content: str
+        perspectives_within_content: str
+        overall_analysis: str
+
+    parser = PydanticOutputParser(pydantic_object = responseFormat)
+
+    prompt1 = ChatPromptTemplate.from_messages(
+        [
+            (
+                "system",
+                """
+                You are a research tool helping students extract meaningful insight from different sources.
+                You must refrain from using markup-formatting and follow this format when wrapping your output:
+                {format_instructions}
+                """
+            ),
+            ("placeholder", "{agent_scratchpad}"),
+            (
+                "human", "{rq} {text} {image_analysis}"
+            ),
+        ]
+    ).partial(format_instructions = parser.get_format_instructions())
+
+    # instantiate tools here
+    tools = [
+        
+    ]
+
+    agent1 = create_tool_calling_agent(
+        llm = ChatOpenAI(model="gpt-4o-mini-2024-07-18"),
+        prompt = prompt1,
+        tools = tools
+    )
+    
+
+    executor1 = AgentExecutor(agent = agent1, tools = tools, verbose = True)
+
+
+    response1 = executor1.invoke(
+        {
+            "rq":rq,
+            "text": inputText,
+            "image_analysis":imageAnalysis.output_text
+,
+        }
+    )
+    query = f"analyse this image based on this RQ: {rq}"
+
+    print(response1.get('output'))
+
+    return response1.get('output')
+
+
+
 
 ################################################################################
 # Explanation of why someone would use ChatGPT here:
@@ -165,8 +273,8 @@ def get_data_json(request):
     rq = parsedData.get('sentRq')
     
     # THE IMPORTANT  (I commented ts out cus too expensive):
-    claudeResponse = callClaude(rq,text,images)
-    strResponse = claudeResponse[0].text
+    openAiResponse = callOpenAI(rq,text,images)
+    # strResponse = claudeResponse[0].text
 
     # make sure to export anthropic key before making requests!
     # format: export ANTHROPIC_API_KEY="<your key here>"
@@ -174,4 +282,5 @@ def get_data_json(request):
 
     # temporary = rq + text + str(images)
 
-    return JsonResponse(strResponse, safe=False)
+    return JsonResponse(openAiResponse, safe=False)
+

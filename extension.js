@@ -9,8 +9,9 @@ async function getPageUrl(){
 
 getPageUrl()
 
-
+let scraperAttached = false
 document.addEventListener("DOMContentLoaded", function(){
+    console.log("called")
     const textFieldButton = document.getElementById("tfButton")
 
     if (textFieldButton){
@@ -21,14 +22,13 @@ document.addEventListener("DOMContentLoaded", function(){
             document.getElementById("scraper").disabled = false
         })
     }
-})
 
-document.addEventListener("DOMContentLoaded", function(){
     const scraper = document.getElementById("scraper");
 
     console.log(scraper) // debugging purposes
 
-    if (scraper) {
+    if (scraper && !scraperAttached) {
+        scraperAttached = true
         scraper.addEventListener("click", function () {
             // console.log("Button clicked!");
             // console.log(document.body)
@@ -37,11 +37,11 @@ document.addEventListener("DOMContentLoaded", function(){
             renderLoading()
         })
     }
-})
 
-document.addEventListener("DOMContentLoaded", function(){
     const resetBtn = document.getElementById("reset")
+
     console.log(resetBtn)
+    
     if (resetBtn){
         resetBtn.addEventListener("click", function(){
             document.getElementById("tfButton").disabled = false
@@ -55,7 +55,6 @@ document.addEventListener("DOMContentLoaded", function(){
             resetDiv.style.opacity = 0
         })
     }
-
 })
 
 const requestScrape = async() => {
@@ -69,10 +68,10 @@ const requestScrape = async() => {
         }
 
         // execute content script
-        await chrome.scripting.executeScript({
-            target: { tabId: tab.id },
-            files: ['content.js']
-        })
+        // await chrome.scripting.executeScript({
+        //     target: { tabId: tab.id },
+        //     files: ['content.js']
+        // })
 
         const response = await chrome.tabs.sendMessage(tab.id, {cmd: "scrape"})
         console.log(response.returnVal) // debugging
@@ -132,10 +131,10 @@ const passDataToPy = async (scrapeObj) => {
     }
     console.log(tab[0])
     console.log(tab[0].id)
-    await chrome.scripting.executeScript({
-        target: {tabId: tab[0].id},
-        files: ['content.js']
-    })
+    // await chrome.scripting.executeScript({
+    //     target: {tabId: tab[0].id},
+    //     files: ['content.js']
+    // })
     let response = await chrome.tabs.sendMessage(tab[0].id, {pyData: [scrapeObj, userRq]})
     clearLoading()
     console.log(response)
