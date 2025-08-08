@@ -49,10 +49,10 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         
         // this url is for ACTUAL DEPLOYMENT:
-        // const url = 'https://opensource-ai-webscraper.onrender.com/get_data_json/'
+        const url = 'https://opensource-ai-webscraper.onrender.com/get_data_json/'
 
         // this url is for LOCAL DEPLOYMENT (DEVELOPMENT):
-        const url = 'http://127.0.0.1:8000/get_data_json/'
+        // const url = 'http://127.0.0.1:8000/get_data_json/'
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

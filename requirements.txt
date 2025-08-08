@@ -7,3 +7,12 @@ django-cors-headers
 langchain
 pydantic
 dotenv
+langchain_openai
+langchain.tools
+langchain_community.tools
+requests
+bs4
+langchain_core.prompts
+langchain_core.output_parsers
+langchain.agents
+base64
