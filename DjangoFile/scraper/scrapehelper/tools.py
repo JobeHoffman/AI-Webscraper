@@ -14,7 +14,7 @@ load_dotenv()
 #     pass
 
 def websearch(research_question: str):
-    bSearch = BraveSearch.from_api_key(api_key = "your api key here", search_kwargs={"count": 3})
+    bSearch = BraveSearch.from_search_kwargs(search_kwargs={"count": 3})
     bSearch_response = bSearch.invoke(research_question) # websearch query
     print(f"{type(bSearch_response)} is the type")
     links = []
