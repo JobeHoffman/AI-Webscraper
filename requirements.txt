@@ -9,5 +9,7 @@ pydantic
 dotenv
 langchain_openai
 langchain_anthropic
+langchain_community
+langchain_core
 requests
 bs4
