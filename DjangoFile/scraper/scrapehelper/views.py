@@ -183,10 +183,10 @@ def callOpenAI(rq, inputText, images):
     print(imageAnalysis.output_text)
 
     class responseFormat(BaseModel):
-        overview_of_content: str
-        perspectives_within_content: str
+        overview_of_input_content: str
+        perspectives_within_input_content: str
         overall_rhetorical_analysis: str
-        overall_usefulness_to_users_research_question: str
+        overall_usefulness_of_input_content_to_users_research_question: str
 
     parser = PydanticOutputParser(pydantic_object = responseFormat)
 

@@ -6,3 +6,4 @@ openai
 django-cors-headers
 langchain
 pydantic
+dotenv

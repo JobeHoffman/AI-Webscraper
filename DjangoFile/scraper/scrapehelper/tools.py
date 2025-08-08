@@ -21,7 +21,7 @@ def websearch(research_question: str):
     headers = "header"
     for entry in bSearch_response.split(','):
         if "link" in entry:
-            link = entry[entry.find(":")+3:-1]
+            link = entry[entry.find(":")+3:len(entry)-1]
             links.append(link)
 
     textContent = []
