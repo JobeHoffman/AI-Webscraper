@@ -20,6 +20,7 @@ from langchain.agents import create_tool_calling_agent, AgentExecutor
 
 # tools import
 from langchain.tools import Tool
+from .tools import *
 
 # ToDos: agentic ai integration
 load_dotenv()
@@ -92,8 +93,9 @@ def callClaude(prompt, inputText, images, previousMessages=[]):
         model="claude-3-5-sonnet-20240620",
         max_tokens=8192,
         temperature=1,
-        system='''You are a 1-response api with absolutely no markup formatting. EVERYTHING must be in plain text with no new lines and no bolding or other formattings. Finally, 
-        use both the given text input and images input to derive your analysis!''',
+        system='''You are a 1-response api with absolutely no markup formatting. 
+        EVERYTHING must be in plain text with no new lines and no bolding or other formattings. 
+        Finally, use both the given text input and images input to derive your analysis!''',
         messages=inputMessage
     )
 
@@ -142,20 +144,6 @@ def callClaude(prompt, inputText, images, previousMessages=[]):
 ################################################################################
 
 def callOpenAI(rq, inputText, images):
-    # client = OpenAI()
-    # imageInput = [{"role": "user", "content": [{
-    #             "type": "input_image",
-    #             "image_url": image
-    #         }]} for image in images]
-    # response = client.responses.create(
-    #     model = "gpt-4.1",
-    #     input = [
-    #         {"role" : "user", "content": f'''Consider the following prompt
-    #          in relation to the images and text in the next prompts: "{prompt}"'''},
-    #         {"role": "user", "content": f"{inputText}"}
-    #     ] + imageInput
-    # )
-    # return response
     client = OpenAI()
     input=[{   
             "role": "user",
@@ -195,9 +183,10 @@ def callOpenAI(rq, inputText, images):
     print(imageAnalysis.output_text)
 
     class responseFormat(BaseModel):
-        overall_synthesis_of_content: str
+        overview_of_content: str
         perspectives_within_content: str
-        overall_analysis: str
+        overall_rhetorical_analysis: str
+        overall_usefulness_to_users_research_question: str
 
     parser = PydanticOutputParser(pydantic_object = responseFormat)
 
@@ -207,6 +196,7 @@ def callOpenAI(rq, inputText, images):
                 "system",
                 """
                 You are a research tool helping students extract meaningful insight from different sources.
+                Since you are capable of analyzing images, you must analyze the images
                 You must refrain from using markup-formatting and follow this format when wrapping your output:
                 {format_instructions}
                 """
@@ -220,7 +210,7 @@ def callOpenAI(rq, inputText, images):
 
     # instantiate tools here
     tools = [
-        
+        websearch
     ]
 
     agent1 = create_tool_calling_agent(
